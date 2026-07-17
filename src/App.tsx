@@ -144,7 +144,10 @@ function PreWeddingGallery() {
     "/images/pre/WhatsApp%20Image%202026-07-16%20at%2004.14.03.jpeg",
     "/images/pre/WhatsApp%20Image%202026-07-16%20at%2004.15.39%20(1).jpeg",
     "/images/pre/WhatsApp%20Image%202026-07-16%20at%2004.15.39.jpeg",
-    "/images/pre/WhatsApp%20Image%202026-07-16%20at%2004.15.40.jpeg"
+    "/images/pre/WhatsApp%20Image%202026-07-16%20at%2004.15.40.jpeg",
+    "/images/pre/WhatsApp%20Image%202026-07-17%20at%2016.12.07.jpeg",
+    "/images/pre/WhatsApp%20Image%202026-07-17%20at%2016.12.48.jpeg",
+    "/images/pre/WhatsApp%20Image%202026-07-17%20at%2016.12.56.jpeg"
   ];
 
   // Duplicate for seamless infinite scroll
@@ -244,6 +247,69 @@ function CountdownTimer() {
 export default function WeddingInvitation() {
   const [isOpened, setIsOpened] = useState(false);
   const [isLowPerformanceMode, setIsLowPerformanceMode] = useState(false);
+
+  const [rsvpName, setRsvpName] = useState("");
+  const [rsvpGuests, setRsvpGuests] = useState("1");
+  const [rsvpDiet, setRsvpDiet] = useState("");
+  const [rsvpStatus, setRsvpStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  const [wishName, setWishName] = useState("");
+  const [wishMessage, setWishMessage] = useState("");
+  const [wishStatus, setWishStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyDkTmZK_WpNELU_-fvEe-lrQl94uZpjowJal9PaDiJ1Oy8j7VdZtj7LjUwP-c3D0rOnQ/exec";
+
+  const handleRsvpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!rsvpName) return;
+    setRsvpStatus("submitting");
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "rsvp",
+          name: rsvpName,
+          guests: rsvpGuests,
+          diet: rsvpDiet,
+        }),
+      });
+      setRsvpStatus("success");
+      setRsvpName("");
+      setRsvpGuests("1");
+      setRsvpDiet("");
+      setTimeout(() => setRsvpStatus("idle"), 3000);
+    } catch (err) {
+      setRsvpStatus("error");
+      setTimeout(() => setRsvpStatus("idle"), 3000);
+    }
+  };
+
+  const handleWishSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!wishName || !wishMessage) return;
+    setWishStatus("submitting");
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "wish",
+          name: wishName,
+          message: wishMessage,
+        }),
+      });
+      setWishStatus("success");
+      setWishName("");
+      setWishMessage("");
+      setTimeout(() => setWishStatus("idle"), 3000);
+    } catch (err) {
+      setWishStatus("error");
+      setTimeout(() => setWishStatus("idle"), 3000);
+    }
+  };
 
   useEffect(() => {
     const motionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -850,11 +916,14 @@ export default function WeddingInvitation() {
 
                   {/* Premium RSVP Form */}
                   <div className="w-full bg-white/5 backdrop-blur-md p-6 sm:p-8 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.5)]">
-                    <form className="space-y-8 text-left" onSubmit={(e) => e.preventDefault()}>
+                    <form className="space-y-8 text-left" onSubmit={handleRsvpSubmit}>
                       <div className="space-y-3">
                         <label className="text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-bold text-theme-200 ml-2">Full Name</label>
                         <input
                           type="text"
+                          required
+                          value={rsvpName}
+                          onChange={(e) => setRsvpName(e.target.value)}
                           placeholder="John & Jane Doe"
                           className="w-full bg-transparent border-b border-white/20 px-2 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-theme-300 transition-colors font-cinzel text-lg md:text-xl tracking-wide"
                         />
@@ -864,7 +933,8 @@ export default function WeddingInvitation() {
                         <label className="text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-bold text-theme-200 ml-2">Guests</label>
                         <div className="relative">
                           <select
-                            defaultValue="1"
+                            value={rsvpGuests}
+                            onChange={(e) => setRsvpGuests(e.target.value)}
                             className="w-full bg-transparent border-b border-white/20 px-2 py-3 text-white focus:outline-none focus:border-theme-300 transition-colors font-cinzel text-lg md:text-xl tracking-wide appearance-none cursor-pointer"
                           >
                             <option value="1" className="bg-[#2c2a26] text-white">1 Guest (Just Me)</option>
@@ -883,6 +953,8 @@ export default function WeddingInvitation() {
                         <label className="text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-bold text-theme-200 ml-2">Dietary Notes</label>
                         <input
                           type="text"
+                          value={rsvpDiet}
+                          onChange={(e) => setRsvpDiet(e.target.value)}
                           placeholder="Allergies, Vegan, etc."
                           className="w-full bg-transparent border-b border-white/20 px-2 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-theme-300 transition-colors font-cinzel text-lg md:text-xl tracking-wide"
                         />
@@ -890,11 +962,12 @@ export default function WeddingInvitation() {
 
                       <div className="pt-10">
                         <button
-                          className="w-full bg-theme-200 text-stone-900 py-5 rounded-full font-bold uppercase tracking-[0.3em] text-[10px] md:text-sm hover:bg-white hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all duration-300 group inline-flex justify-center items-center gap-4"
+                          disabled={rsvpStatus === "submitting"}
+                          className={`w-full ${rsvpStatus === "success" ? "bg-green-500 text-white" : rsvpStatus === "error" ? "bg-red-500 text-white" : "bg-theme-200 text-stone-900"} py-5 rounded-full font-bold uppercase tracking-[0.3em] text-[10px] md:text-sm hover:bg-white hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all duration-300 group inline-flex justify-center items-center gap-4`}
                         >
-                          <span className="w-1.5 h-1.5 bg-stone-900 rotate-45 group-hover:scale-150 transition-transform" />
-                          Send RSVP
-                          <span className="w-1.5 h-1.5 bg-stone-900 rotate-45 group-hover:scale-150 transition-transform" />
+                          <span className="w-1.5 h-1.5 bg-current rotate-45 group-hover:scale-150 transition-transform" />
+                          {rsvpStatus === "submitting" ? "Sending..." : rsvpStatus === "success" ? "RSVP Sent!" : rsvpStatus === "error" ? "Error, Try Again" : "Send RSVP"}
+                          <span className="w-1.5 h-1.5 bg-current rotate-45 group-hover:scale-150 transition-transform" />
                         </button>
                       </div>
                     </form>
@@ -934,11 +1007,14 @@ export default function WeddingInvitation() {
                       {/* Decorative internal lines */}
                       <div className="absolute inset-2 md:inset-4 border-[0.5px] border-theme-200/50 rounded-tr-[3.5rem] rounded-bl-[3.5rem] pointer-events-none transition-colors duration-700 group-hover:border-theme-300/80" />
 
-                      <form className="space-y-8 text-left relative z-10" onSubmit={(e) => e.preventDefault()}>
+                      <form className="space-y-8 text-left relative z-10" onSubmit={handleWishSubmit}>
                         <div className="space-y-3">
                           <label className="text-[7px] md:text-[9px] uppercase tracking-[0.4em] font-bold text-stone-400 ml-2">Your Name</label>
                           <input
                             type="text"
+                            required
+                            value={wishName}
+                            onChange={(e) => setWishName(e.target.value)}
                             placeholder="John Doe"
                             className="w-full bg-stone-50/50 border-b border-theme-200 px-4 py-4 text-theme-900 placeholder:text-stone-300 focus:outline-none focus:border-theme-400 focus:bg-white transition-all font-cinzel text-lg tracking-wide rounded-t-lg"
                           />
@@ -947,15 +1023,21 @@ export default function WeddingInvitation() {
                           <label className="text-[7px] md:text-[9px] uppercase tracking-[0.4em] font-bold text-stone-400 ml-2">Your Message</label>
                           <textarea
                             rows={4}
+                            required
+                            value={wishMessage}
+                            onChange={(e) => setWishMessage(e.target.value)}
                             placeholder="Wishing you a lifetime of happiness..."
                             className="w-full bg-stone-50/50 border-b border-theme-200 px-4 py-4 text-theme-900 placeholder:text-stone-300 focus:outline-none focus:border-theme-400 focus:bg-white transition-all font-cinzel text-lg tracking-wide resize-none rounded-t-lg"
                           />
                         </div>
                         <div className="pt-6 flex justify-center">
-                          <button className="bg-theme-800 text-white px-12 py-5 rounded-full font-bold uppercase tracking-[0.3em] text-[10px] hover:bg-theme-900 hover:shadow-xl hover:shadow-theme-900/20 transition-all duration-300 group/btn inline-flex items-center gap-4">
-                            <span className="w-1.5 h-1.5 bg-white rotate-45 group-hover/btn:scale-150 transition-transform" />
-                            Send Wishes
-                            <span className="w-1.5 h-1.5 bg-white rotate-45 group-hover/btn:scale-150 transition-transform" />
+                          <button 
+                            disabled={wishStatus === "submitting"}
+                            className={`${wishStatus === "success" ? "bg-green-500 text-white" : wishStatus === "error" ? "bg-red-500 text-white" : "bg-theme-800 text-white hover:bg-theme-900"} px-12 py-5 rounded-full font-bold uppercase tracking-[0.3em] text-[10px] hover:shadow-xl hover:shadow-theme-900/20 transition-all duration-300 group/btn inline-flex items-center gap-4`}
+                          >
+                            <span className="w-1.5 h-1.5 bg-current rotate-45 group-hover/btn:scale-150 transition-transform" />
+                            {wishStatus === "submitting" ? "Sending..." : wishStatus === "success" ? "Sent Successfully!" : wishStatus === "error" ? "Error, Try Again" : "Send Wishes"}
+                            <span className="w-1.5 h-1.5 bg-current rotate-45 group-hover/btn:scale-150 transition-transform" />
                           </button>
                         </div>
                       </form>
@@ -988,7 +1070,7 @@ export default function WeddingInvitation() {
                   © 2026 Peshala & Pathum. <span className="hidden md:inline">|</span><br className="md:hidden block mt-2" /> All rights reserved.
                 </p>
                 <p className="text-[8px] md:text-[10px] tracking-[0.3em] text-stone-400">
-                  Contact: <a href="tel:0716613988" className="text-theme-600 font-bold hover:text-theme-800 transition-colors">Peshala – 071 6613988</a>
+                  Designed by <a href="https://wa.me/94707819074" target="_blank" rel="noopener noreferrer" className="text-theme-600 font-bold hover:text-theme-800 transition-colors">Invitemint - +94 70 781 9074</a>
                 </p>
               </footer>
             </div>
