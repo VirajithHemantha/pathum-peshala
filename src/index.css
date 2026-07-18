@@ -8,19 +8,19 @@
   --font-montserrat: "Montserrat", sans-serif;
   --font-playball: "Playball", cursive;
 
-  --color-sage: #d49b29;
+  --color-sage: #ff3349;
   --color-paper: #ffffff;
 
-  --color-theme-50: #fffdf5;
-  --color-theme-100: #faf2db;
-  --color-theme-200: #f2dfab;
-  --color-theme-300: #eacc7b;
-  --color-theme-400: #e1b54a;
-  --color-theme-500: #d49b29;
-  --color-theme-600: #b57a20;
-  --color-theme-700: #90591b;
-  --color-theme-800: #764619;
-  --color-theme-900: #623a17;
+  --color-theme-50: #fff0f2;
+  --color-theme-100: #ffe1e5;
+  --color-theme-200: #ffc9cf;
+  --color-theme-300: #ffa1aa;
+  --color-theme-400: #ff6a7a;
+  --color-theme-500: #ff3349;
+  --color-theme-600: #ed1c33;
+  --color-theme-700: #c61023;
+  --color-theme-800: #a51221;
+  --color-theme-900: #88151f;
 }
 
 :root {
@@ -77,7 +77,7 @@ html, body {
   width: clamp(300px, 38vw, 620px);
   aspect-ratio: 1 / 1;
   opacity: var(--mandala-accent-opacity);
-  filter: sepia(1) saturate(1.8) hue-rotate(15deg) brightness(1.12) contrast(1.05);
+  filter: sepia(1) saturate(3) hue-rotate(-50deg) brightness(0.9) contrast(1.2);
 }
 
 .mandala-corner.is-soft {
