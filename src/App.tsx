@@ -257,7 +257,7 @@ export default function WeddingInvitation() {
   const [wishMessage, setWishMessage] = useState("");
   const [wishStatus, setWishStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyDkTmZK_WpNELU_-fvEe-lrQl94uZpjowJal9PaDiJ1Oy8j7VdZtj7LjUwP-c3D0rOnQ/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6Iteqct9SSOMK-Z9pX03ReaivzquLcZMpW2f-P_LBMEpwKXeoo0ZdbBrbPn5UXJ6J/exec";
 
   const handleRsvpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -267,7 +267,7 @@ export default function WeddingInvitation() {
       await fetch(SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({
           formType: "rsvp",
           name: rsvpName,
@@ -294,7 +294,7 @@ export default function WeddingInvitation() {
       await fetch(SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({
           formType: "wish",
           name: wishName,
@@ -345,7 +345,7 @@ export default function WeddingInvitation() {
   useEffect(() => {
     let audio: HTMLAudioElement | null = null;
     if (isOpened) {
-      audio = new Audio('/images/song.mp3');
+      audio = new Audio('/bride_mashup.mp3');
       audio.loop = true;
       audio.volume = 0.5;
       audio.play().catch(e => console.warn("Audio play failed", e));
