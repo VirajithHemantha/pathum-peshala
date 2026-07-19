@@ -393,7 +393,7 @@ export default function WeddingInvitation() {
               <h1 className="font-cinzel text-4xl md:text-5xl text-stone-800 mb-4 tracking-tight">
                 Pathum & Peshala
               </h1>
-              <p className="text-stone-500 text-sm tracking-[0.2em] font-light">AUGUST 20, 2026</p>
+              <p className="text-stone-500 text-sm tracking-[0.2em] font-light">AUGUST 22, 2026</p>
             </motion.div>
 
             {/* Gatefold Envelope */}
@@ -433,7 +433,7 @@ export default function WeddingInvitation() {
                   alt=""
                 />
 
-                <div className="text-theme-600/60 rotate-90 whitespace-nowrap text-xs tracking-[0.55em] uppercase font-bold relative z-10">
+                <div className="bg-white/85 backdrop-blur-md px-6 py-2 rounded-full border border-theme-200 shadow-md text-theme-900 rotate-90 whitespace-nowrap text-xs tracking-[0.55em] uppercase font-bold relative z-10">
                   PATHUM & PESHALA
                 </div>
               </motion.div>
